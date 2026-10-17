@@ -54,18 +54,18 @@ the terminal:
 gh release download --repo DiagScope/releases --pattern 'diagscope-*.jar'
 
 # a specific version (the tag is the version with a "v")
-gh release download v0.1.1 --repo DiagScope/releases --pattern 'diagscope-*.jar'
+gh release download v0.1.3 --repo DiagScope/releases --pattern 'diagscope-*.jar'
 
 # without the GitHub CLI
-curl -fLO https://github.com/DiagScope/releases/releases/download/v0.1.1/diagscope-0.1.1.jar
+curl -fLO https://github.com/DiagScope/releases/releases/download/v0.1.3/diagscope-0.1.3.jar
 ```
 
 **3. Verify it** (optional but recommended). Each Homebrew formula records the SHA-256 of the JAR it
 installs, so you can compare against it:
 
 ```bash
-shasum -a 256 diagscope-0.1.1.jar        # macOS
-sha256sum diagscope-0.1.1.jar            # Linux
+shasum -a 256 diagscope-0.1.3.jar        # macOS
+sha256sum diagscope-0.1.3.jar            # Linux
 ```
 
 The expected value is the `sha256` line of
@@ -75,14 +75,14 @@ tap (history of that file has the value for older versions).
 **4. Run it:**
 
 ```bash
-java -jar diagscope-0.1.1.jar --version
-java -jar diagscope-0.1.1.jar scan --project /path/to/project
+java -jar diagscope-0.1.3.jar --version
+java -jar diagscope-0.1.3.jar scan --project /path/to/project
 ```
 
 Handy alias so you can type `diagscope` instead:
 
 ```bash
-alias diagscope='java -jar /path/to/diagscope-0.1.1.jar'
+alias diagscope='java -jar /path/to/diagscope-0.1.3.jar'
 ```
 
 ---
@@ -112,8 +112,8 @@ Download a pinned JAR in the job and run it. Pinning a version keeps results rep
     distribution: temurin
     java-version: '25'
 - run: |
-    curl -fLO https://github.com/DiagScope/releases/releases/download/v0.1.1/diagscope-0.1.1.jar
-    java -jar diagscope-0.1.1.jar scan --project . --format HTML,JSON --fail-on ERROR
+    curl -fLO https://github.com/DiagScope/releases/releases/download/v0.1.3/diagscope-0.1.3.jar
+    java -jar diagscope-0.1.3.jar scan --project . --format HTML,JSON --fail-on ERROR
 - uses: actions/upload-artifact@v4
   if: always()
   with:
@@ -121,11 +121,24 @@ Download a pinned JAR in the job and run it. Pinning a version keeps results rep
     path: target/diagscope/
 ```
 
+A project can also keep its tolerance in `diagscope.yml` (a `gate:` section with minimum severity and confidence,
+per-severity limits and named profiles) and run `diagscope scan --project .` with no gate flag. See the
+[tap README](https://github.com/DiagScope/homebrew-tap#setting-the-tolerance-the-gate).
+
+---
+
+## Using it with AI coding assistants
+
+`diagscope init-agent` writes instructions into `AGENTS.md` and `CLAUDE.md` and, for Claude Code, a hook that scans
+the changed files when a task ends. `diagscope scan --format AGENT` prints compact text for a model. With the JAR,
+run `diagscope init-agent --command "java -jar /path/to/diagscope-0.1.3.jar"`. See the
+[tap README](https://github.com/DiagScope/homebrew-tap#using-it-with-ai-coding-assistants).
+
 ---
 
 ## Versions and release notes
 
-- Releases are tagged `v<version>`, for example `v0.1.1`.
+- Releases are tagged `v<version>`, for example `v0.1.3`.
 - Versions containing `alpha`, `beta` or `rc` are published as **pre-releases**. DiagScope is still in an
   early stage, so rules, report layout and options can change between versions — read the release notes
   before upgrading a pinned version.
@@ -141,7 +154,7 @@ Download a pinned JAR in the job and run it. Pinning a version keeps results rep
 |---|---|
 | `UnsupportedClassVersionError` or "class file version 69.0" | Your Java is older than 25. Install Java 25+ (Homebrew users get it automatically) and check `java -version`. |
 | `command not found: diagscope` | With Homebrew, run `brew install diagscope` and open a new terminal. With the JAR, use `java -jar …` or the alias above. |
-| `gh release download` finds no release | `gh` skips pre-releases when no tag is given. Name the tag explicitly, for example `gh release download v0.1.1 …`. |
+| `gh release download` finds no release | `gh` skips pre-releases when no tag is given. Name the tag explicitly, for example `gh release download v0.1.3 …`. |
 | The checksum does not match | Download again; if it still differs, do not run the file and report it to the maintainers. |
 
 ---
