@@ -127,6 +127,14 @@ per-severity limits and named profiles) and run `diagscope scan --project .` wit
 
 ---
 
+## Using it in a Maven build
+
+The plugin is on Maven Central (`io.github.diagscope:diagscope-maven-plugin`) and fails `mvn verify` with the same gate as
+the CLI. See the [tap README](https://github.com/DiagScope/homebrew-tap#using-it-in-a-maven-build). It does not use the
+JAR on this page: Maven downloads what it needs from Central.
+
+---
+
 ## Using it with AI coding assistants
 
 `diagscope init-agent` writes instructions into `AGENTS.md` and `CLAUDE.md` and, for Claude Code, a hook that scans
